@@ -33,6 +33,10 @@ type ChatSendResult = {
 };
 
 type PreloadApi = InkbloomApi & {
+  saveChapterDraft(input: {
+    relativeManuscriptPath: string;
+    content: string;
+  }): Promise<{ filePath: string }>;
   sendChatTurn(input: ChatSendInput): Promise<ChatSendResult>;
 };
 
@@ -48,6 +52,12 @@ const api: PreloadApi = {
   },
   getWorkflowSnapshot(signals: WorkflowSignals) {
     return ipcRenderer.invoke("workflow:getSnapshot", signals);
+  },
+  saveChapterDraft(input: {
+    relativeManuscriptPath: string;
+    content: string;
+  }) {
+    return ipcRenderer.invoke("manuscript:saveChapterDraft", input);
   },
   sendChatTurn(input: ChatSendInput) {
     return ipcRenderer.invoke("chat:send", input);

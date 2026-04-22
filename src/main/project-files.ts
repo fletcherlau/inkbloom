@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 function assertSafeProjectName(parentDir: string, projectName: string) {
   if (!projectName.trim()) {
@@ -55,4 +55,8 @@ export function createProjectScaffold(parentDir: string, projectName: string) {
   );
 
   return projectPath;
+}
+
+export function ensureParentDirectory(filePath: string) {
+  mkdirSync(dirname(resolve(filePath)), { recursive: true });
 }

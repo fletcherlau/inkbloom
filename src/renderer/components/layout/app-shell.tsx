@@ -1,3 +1,4 @@
+import { ChapterPanel } from "../chapters/chapter-panel";
 import { StoryBiblePanel } from "../bible/story-bible-panel";
 import { ChatPanel } from "../chat/chat-panel";
 import { WorkflowSidebar } from "../workflow/workflow-sidebar";
@@ -30,6 +31,11 @@ export function AppShell() {
             onModeChange={workspaceStore.setSelectedMode}
             onSend={workspaceStore.sendMessage}
           />
+          <ChapterPanel
+            title="第一章草稿"
+            relativeManuscriptPath="volume-01/chapter-001.md"
+            initialContent="# 第一章\n\n在这里继续起草本章正文。"
+          />
         </section>
         <WorkflowSidebar stage={workflowStage} />
       </div>
@@ -60,6 +66,9 @@ const styles = {
     minHeight: "100vh",
   },
   centerColumn: {
+    display: "grid",
+    gridTemplateRows: "auto minmax(0, 1fr) auto",
+    gap: "1rem",
     padding: "1.75rem",
     minWidth: 0,
   },
