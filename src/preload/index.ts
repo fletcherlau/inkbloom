@@ -5,6 +5,7 @@ import type {
   BibleItemType,
   ChapterInput,
   InkbloomApi,
+  WorkflowSignals,
   WorkspaceSummary,
 } from "../shared/contracts";
 
@@ -19,6 +20,9 @@ const api: InkbloomApi = {
   },
   createChapter(input: ChapterInput) {
     return ipcRenderer.invoke("workspace:createChapter", input);
+  },
+  getWorkflowSnapshot(signals: WorkflowSignals) {
+    return ipcRenderer.invoke("workflow:getSnapshot", signals);
   },
 };
 

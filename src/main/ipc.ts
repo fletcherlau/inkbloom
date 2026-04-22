@@ -1,7 +1,13 @@
 import { ipcMain } from "electron";
 
-import type { BibleItemInput, BibleItemType, ChapterInput } from "../shared/contracts";
+import type {
+  BibleItemInput,
+  BibleItemType,
+  ChapterInput,
+  WorkflowSignals,
+} from "../shared/contracts";
 import { createWorkspaceRepository } from "./database/repositories/workspace-repository";
+import { getWorkflowSnapshot } from "./services/workflow-service";
 
 export function registerWorkspaceIpcHandlers(dbPath: string) {
   const workspaceRepository = createWorkspaceRepository(dbPath);
@@ -18,5 +24,9 @@ export function registerWorkspaceIpcHandlers(dbPath: string) {
 
   ipcMain.handle("workspace:createChapter", async (_event, payload: ChapterInput) =>
     workspaceRepository.createChapter(payload),
+  );
+
+  ipcMain.handle("workflow:getSnapshot", async (_event, payload: WorkflowSignals) =>
+    getWorkflowSnapshot(payload),
   );
 }

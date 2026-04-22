@@ -11,6 +11,24 @@ export interface WorkspaceSummary {
   projectName: string | null;
 }
 
+export interface WorkflowSignals {
+  hasSynopsis: boolean;
+  hasCharacters: boolean;
+  hasOutline: boolean;
+  chapterCount: number;
+}
+
+export interface WorkflowSnapshot {
+  stage: WorkflowStage;
+  suggestedAction: string;
+  completion: {
+    synopsis: boolean;
+    characters: boolean;
+    outline: boolean;
+    drafting: boolean;
+  };
+}
+
 export type BibleItemType =
   | "braindump"
   | "genre"
@@ -113,6 +131,7 @@ export interface InkbloomApi {
   listBibleItems(projectId: string, type: BibleItemType): Promise<BibleItemRecord[]>;
   createBibleItem(input: BibleItemInput): Promise<BibleItemRecord>;
   createChapter(input: ChapterInput): Promise<ChapterRecord>;
+  getWorkflowSnapshot(signals: WorkflowSignals): Promise<WorkflowSnapshot>;
 }
 
 declare global {
