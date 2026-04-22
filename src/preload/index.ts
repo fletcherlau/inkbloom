@@ -11,7 +11,32 @@ import type {
 
 export type { WorkspaceSummary };
 
-const api: InkbloomApi = {
+type ChatSendInput = {
+  mode: "organize" | "explore" | "check" | "task";
+  content: string;
+  context?: {
+    activeBibleType?: BibleItemType;
+    stage?: "ideation" | "foundation" | "outline" | "drafting" | "revision" | "export";
+  };
+};
+
+type ChatSendResult = {
+  assistantMessage: {
+    role: "assistant";
+    content: string;
+  };
+  skillResult: {
+    skill: "capture_braindump" | "next_step_guide" | "consistency_check" | "shape_synopsis";
+    summary: string;
+    payload: Record<string, string>;
+  };
+};
+
+type PreloadApi = InkbloomApi & {
+  sendChatTurn(input: ChatSendInput): Promise<ChatSendResult>;
+};
+
+const api: PreloadApi = {
   listBibleItems(projectId: string, type: BibleItemType) {
     return ipcRenderer.invoke("workspace:listBibleItems", { projectId, type });
   },
@@ -23,6 +48,9 @@ const api: InkbloomApi = {
   },
   getWorkflowSnapshot(signals: WorkflowSignals) {
     return ipcRenderer.invoke("workflow:getSnapshot", signals);
+  },
+  sendChatTurn(input: ChatSendInput) {
+    return ipcRenderer.invoke("chat:send", input);
   },
 };
 

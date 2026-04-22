@@ -7,6 +7,7 @@ import type {
   WorkflowSignals,
 } from "../shared/contracts";
 import { createWorkspaceRepository } from "./database/repositories/workspace-repository";
+import { sendChatTurn } from "./services/chat-service";
 import { getWorkflowSnapshot } from "./services/workflow-service";
 
 export function registerWorkspaceIpcHandlers(dbPath: string) {
@@ -28,5 +29,20 @@ export function registerWorkspaceIpcHandlers(dbPath: string) {
 
   ipcMain.handle("workflow:getSnapshot", async (_event, payload: WorkflowSignals) =>
     getWorkflowSnapshot(payload),
+  );
+
+  ipcMain.handle(
+    "chat:send",
+    async (
+      _event,
+      payload: {
+        mode: "organize" | "explore" | "check" | "task";
+        content: string;
+        context?: {
+          activeBibleType?: BibleItemType;
+          stage?: "ideation" | "foundation" | "outline" | "drafting" | "revision" | "export";
+        };
+      },
+    ) => sendChatTurn(payload),
   );
 }
