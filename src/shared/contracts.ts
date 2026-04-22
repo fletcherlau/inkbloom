@@ -11,6 +11,32 @@ export interface WorkspaceSummary {
   projectName: string | null;
 }
 
+export type BibleItemType =
+  | "braindump"
+  | "genre"
+  | "style"
+  | "synopsis"
+  | "characters"
+  | "worldbuilding"
+  | "outline"
+  | "themes"
+  | "constraints";
+
+export interface BibleItemInput {
+  projectId: string;
+  type: BibleItemType;
+  title: string;
+  content: string;
+}
+
+export interface ChapterInput {
+  projectId: string;
+  volumeKey: string;
+  chapterKey: string;
+  title: string;
+  manuscriptPath: string;
+}
+
 export interface ProjectRecord {
   id: string;
   name: string;
@@ -22,7 +48,7 @@ export interface ProjectRecord {
 export interface BibleItemRecord {
   id: string;
   projectId: string;
-  type: string;
+  type: BibleItemType;
   title: string;
   content: string;
   status: "draft" | "confirmed";
@@ -81,4 +107,16 @@ export interface TaskRecord {
   outputJson: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface InkbloomApi {
+  listBibleItems(projectId: string, type: BibleItemType): Promise<BibleItemRecord[]>;
+  createBibleItem(input: BibleItemInput): Promise<BibleItemRecord>;
+  createChapter(input: ChapterInput): Promise<ChapterRecord>;
+}
+
+declare global {
+  interface Window {
+    inkbloom: InkbloomApi;
+  }
 }

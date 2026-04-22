@@ -1,7 +1,25 @@
-import { contextBridge } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
 
-import type { WorkspaceSummary } from "@shared/contracts";
+import type {
+  BibleItemInput,
+  BibleItemType,
+  ChapterInput,
+  InkbloomApi,
+  WorkspaceSummary,
+} from "../shared/contracts";
 
 export type { WorkspaceSummary };
 
-contextBridge.exposeInMainWorld("inkbloom", {});
+const api: InkbloomApi = {
+  listBibleItems(projectId: string, type: BibleItemType) {
+    return ipcRenderer.invoke("workspace:listBibleItems", { projectId, type });
+  },
+  createBibleItem(input: BibleItemInput) {
+    return ipcRenderer.invoke("workspace:createBibleItem", input);
+  },
+  createChapter(input: ChapterInput) {
+    return ipcRenderer.invoke("workspace:createChapter", input);
+  },
+};
+
+contextBridge.exposeInMainWorld("inkbloom", api);
