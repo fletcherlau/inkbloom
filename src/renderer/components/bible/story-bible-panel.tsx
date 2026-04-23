@@ -26,7 +26,9 @@ export function StoryBiblePanel({
         <h2 id="story-bible-title" style={styles.title}>
           {projectName}
         </h2>
-        <p style={styles.description}>长期设定和核心材料在这里沉淀，后续 Task 5 再接入真实工作流与回写逻辑。</p>
+        <p style={styles.description}>
+          长期设定和核心材料在这里沉淀。当前版本先接住聊天里的“保存到 Story Bible”动作提示，暂不扩展成真正回写编辑器。
+        </p>
       </header>
       <nav aria-label="story-bible-sections" style={styles.nav}>
         {bibleSections.map((section) => {

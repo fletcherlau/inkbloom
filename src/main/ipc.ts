@@ -54,6 +54,9 @@ export function registerWorkspaceIpcHandlers(dbPath: string) {
         context?: {
           activeBibleType?: BibleItemType;
           stage?: "ideation" | "foundation" | "outline" | "drafting" | "revision" | "export";
+          characters?: string[];
+          styleSummary?: string;
+          chapterTitle?: string;
         };
       },
     ) => sendChatTurn(payload),

@@ -17,6 +17,9 @@ type ChatSendInput = {
   context?: {
     activeBibleType?: BibleItemType;
     stage?: "ideation" | "foundation" | "outline" | "drafting" | "revision" | "export";
+    characters?: string[];
+    styleSummary?: string;
+    chapterTitle?: string;
   };
 };
 
@@ -25,6 +28,7 @@ type ChatSendResult = {
     role: "assistant";
     content: string;
   };
+  saveTargets?: readonly ("story-bible" | "chapter" | "task")[];
   skillResult: {
     skill: "capture_braindump" | "next_step_guide" | "consistency_check" | "shape_synopsis";
     summary: string;

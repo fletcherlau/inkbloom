@@ -1,4 +1,4 @@
-import { buildChatContext } from "./context-service";
+import { buildChatContext, buildConsistencyContext } from "./context-service";
 import type { ChatActionMode, ChatContext } from "./context-service";
 
 export interface SkillRequest {
@@ -41,11 +41,18 @@ export async function runSkill(request: SkillRequest): Promise<SkillResult> {
   }
 
   if (request.mode === "check") {
+    const consistencyContext = buildConsistencyContext({
+      characters: context.characters ?? [],
+      styleSummary: context.styleSummary ?? "待补充",
+      chapterTitle: context.chapterTitle ?? "当前章节",
+    });
+
     return {
       skill: "consistency_check",
-      summary: "已进入轻量一致性检查模式。",
+      summary: "已进入轻量一致性检查模式，可先判断是否要保存到 Story Bible、章节或转成任务继续处理。",
       payload: {
         focus: "角色、设定与时间线",
+        consistencyContext,
       },
     };
   }

@@ -8,6 +8,8 @@ export interface SendChatTurnInput {
   context?: Partial<ChatContext>;
 }
 
+export type SaveTarget = "story-bible" | "chapter" | "task";
+
 export async function sendChatTurn(input: SendChatTurnInput) {
   const content = input.content.trim();
   const context = buildChatContext(input);
@@ -22,6 +24,7 @@ export async function sendChatTurn(input: SendChatTurnInput) {
       role: "assistant" as const,
       content: skillResult.summary,
     },
+    saveTargets: ["story-bible", "chapter", "task"] as const satisfies readonly SaveTarget[],
     skillResult,
   };
 }
