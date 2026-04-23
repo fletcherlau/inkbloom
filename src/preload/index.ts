@@ -4,7 +4,11 @@ import type {
   BibleItemInput,
   BibleItemType,
   ChapterInput,
+  CreateBookInput,
+  DeleteBookInput,
+  GlobalLlmSettings,
   InkbloomApi,
+  UpdateBookInput,
   WorkflowSignals,
   WorkspaceSummary,
 } from "../shared/contracts";
@@ -45,6 +49,24 @@ type PreloadApi = InkbloomApi & {
 };
 
 const api: PreloadApi = {
+  listBooks() {
+    return ipcRenderer.invoke("library:listBooks");
+  },
+  createBook(input: CreateBookInput) {
+    return ipcRenderer.invoke("library:createBook", input);
+  },
+  updateBook(input: UpdateBookInput) {
+    return ipcRenderer.invoke("library:updateBook", input);
+  },
+  deleteBook(input: DeleteBookInput) {
+    return ipcRenderer.invoke("library:deleteBook", input);
+  },
+  getGlobalLlmSettings() {
+    return ipcRenderer.invoke("settings:getGlobalLlm");
+  },
+  saveGlobalLlmSettings(input: GlobalLlmSettings) {
+    return ipcRenderer.invoke("settings:saveGlobalLlm", input);
+  },
   listBibleItems(projectId: string, type: BibleItemType) {
     return ipcRenderer.invoke("workspace:listBibleItems", { projectId, type });
   },

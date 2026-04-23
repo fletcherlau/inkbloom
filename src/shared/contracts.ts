@@ -78,6 +78,19 @@ export interface GlobalLlmSettings {
   model: string;
 }
 
+export interface CreateBookInput {
+  title: string;
+}
+
+export interface UpdateBookInput {
+  id: string;
+  title: string;
+}
+
+export interface DeleteBookInput {
+  id: string;
+}
+
 export interface BibleItemRecord {
   id: string;
   projectId: string;
@@ -143,6 +156,12 @@ export interface TaskRecord {
 }
 
 export interface InkbloomApi {
+  listBooks(): Promise<BookSummary[]>;
+  createBook(input: CreateBookInput): Promise<BookSummary>;
+  updateBook(input: UpdateBookInput): Promise<BookSummary>;
+  deleteBook(input: DeleteBookInput): Promise<void>;
+  getGlobalLlmSettings(): Promise<GlobalLlmSettings>;
+  saveGlobalLlmSettings(input: GlobalLlmSettings): Promise<GlobalLlmSettings>;
   listBibleItems(projectId: string, type: BibleItemType): Promise<BibleItemRecord[]>;
   createBibleItem(input: BibleItemInput): Promise<BibleItemRecord>;
   createChapter(input: ChapterInput): Promise<ChapterRecord>;

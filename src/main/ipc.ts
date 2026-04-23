@@ -5,16 +5,47 @@ import type {
   BibleItemInput,
   BibleItemType,
   ChapterInput,
+  CreateBookInput,
+  DeleteBookInput,
+  GlobalLlmSettings,
+  UpdateBookInput,
   WorkflowSignals,
 } from "../shared/contracts";
 import { createWorkspaceRepository } from "./database/repositories/workspace-repository";
+import { createLibraryService } from "./services/library-service";
 import { sendChatTurn } from "./services/chat-service";
 import { saveChapterDraft } from "./services/manuscript-service";
+import { createSettingsService } from "./services/settings-service";
 import { getWorkflowSnapshot } from "./services/workflow-service";
 
 export function registerWorkspaceIpcHandlers(dbPath: string) {
   const workspaceRepository = createWorkspaceRepository(dbPath);
   const currentProjectRoot = join(app.getPath("userData"), "task-7-current-project");
+  const libraryService = createLibraryService({
+    dbPath,
+    libraryRoot: join(app.getPath("userData"), "books"),
+  });
+  const settingsService = createSettingsService(dbPath);
+
+  ipcMain.handle("library:listBooks", async () => libraryService.listBooks());
+
+  ipcMain.handle("library:createBook", async (_event, payload: CreateBookInput) =>
+    libraryService.createBook(payload),
+  );
+
+  ipcMain.handle("library:updateBook", async (_event, payload: UpdateBookInput) =>
+    libraryService.updateBook(payload),
+  );
+
+  ipcMain.handle("library:deleteBook", async (_event, payload: DeleteBookInput) =>
+    libraryService.deleteBook(payload.id),
+  );
+
+  ipcMain.handle("settings:getGlobalLlm", async () => settingsService.getGlobalLlmSettings());
+
+  ipcMain.handle("settings:saveGlobalLlm", async (_event, payload: GlobalLlmSettings) =>
+    settingsService.saveGlobalLlmSettings(payload),
+  );
 
   ipcMain.handle(
     "workspace:listBibleItems",
