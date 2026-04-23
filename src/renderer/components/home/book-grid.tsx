@@ -9,7 +9,7 @@ export function BookGrid(props: {
   onOpenDeleteDialog: (book: BookSummary) => void;
 }) {
   return (
-    <section aria-label="book-grid" style={styles.grid}>
+    <section aria-label="book-grid" className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
       {props.books.map((book) => (
         <BookCard
           key={book.id}
@@ -22,11 +22,3 @@ export function BookGrid(props: {
     </section>
   );
 }
-
-const styles = {
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "1rem",
-  },
-};
