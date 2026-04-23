@@ -111,8 +111,9 @@ export function SettingsScreen(props: {
 
           <Card className="p-4 space-y-4">
             <div className="space-y-2">
-              <Label>AI 后端</Label>
+              <Label htmlFor="provider">AI 后端</Label>
               <Select
+                name="provider"
                 value={draft.provider}
                 onValueChange={(value) => {
                   setDraft({ ...draft, provider: value });
@@ -120,7 +121,7 @@ export function SettingsScreen(props: {
                   setTestResult(null);
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger id="provider">
                   <SelectValue placeholder="请选择后端" />
                 </SelectTrigger>
                 <SelectContent>
@@ -139,46 +140,46 @@ export function SettingsScreen(props: {
             {isKimiCliMode ? (
               <>
                 <div className="space-y-2">
-                  <Label>API Key</Label>
-                  <Input type="password" value={draft.apiKey} onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="apiKey">API Key</Label>
+                  <Input id="apiKey" type="password" value={draft.apiKey} onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Model</Label>
-                  <Input placeholder="默认 kimi-for-coding" value={draft.model} onChange={(e) => { setDraft({ ...draft, model: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="model">Model</Label>
+                  <Input id="model" placeholder="默认 kimi-for-coding" value={draft.model} onChange={(e) => { setDraft({ ...draft, model: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Base URL</Label>
-                  <Input placeholder="可留空，默认使用 https://api.kimi.com/coding/v1" value={draft.baseUrl} onChange={(e) => { setDraft({ ...draft, baseUrl: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="baseUrl">Base URL</Label>
+                  <Input id="baseUrl" placeholder="可留空，默认使用 https://api.kimi.com/coding/v1" value={draft.baseUrl} onChange={(e) => { setDraft({ ...draft, baseUrl: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
               </>
             ) : isAnthropicMode ? (
               <>
                 <div className="space-y-2">
-                  <Label>Base URL</Label>
-                  <Input placeholder="可留空，默认使用 https://api.kimi.com/coding/" value={draft.baseUrl} onChange={(e) => { setDraft({ ...draft, baseUrl: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="baseUrl">Base URL</Label>
+                  <Input id="baseUrl" placeholder="可留空，默认使用 https://api.kimi.com/coding/" value={draft.baseUrl} onChange={(e) => { setDraft({ ...draft, baseUrl: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>API Key</Label>
-                  <Input type="password" value={draft.apiKey} onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="apiKey">API Key</Label>
+                  <Input id="apiKey" type="password" value={draft.apiKey} onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Model</Label>
-                  <Input placeholder="默认 kimi-for-coding" value={draft.model} onChange={(e) => { setDraft({ ...draft, model: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="model">Model</Label>
+                  <Input id="model" placeholder="默认 kimi-for-coding" value={draft.model} onChange={(e) => { setDraft({ ...draft, model: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
               </>
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label>Base URL</Label>
-                  <Input placeholder="例如 https://api.moonshot.cn/v1" value={draft.baseUrl} onChange={(e) => { setDraft({ ...draft, baseUrl: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="baseUrl">Base URL</Label>
+                  <Input id="baseUrl" placeholder="例如 https://api.moonshot.cn/v1" value={draft.baseUrl} onChange={(e) => { setDraft({ ...draft, baseUrl: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>API Key</Label>
-                  <Input type="password" value={draft.apiKey} onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="apiKey">API Key</Label>
+                  <Input id="apiKey" type="password" value={draft.apiKey} onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Model</Label>
-                  <Input value={draft.model} onChange={(e) => { setDraft({ ...draft, model: e.target.value }); setNotice(null); setTestResult(null); }} />
+                  <Label htmlFor="model">Model</Label>
+                  <Input id="model" value={draft.model} onChange={(e) => { setDraft({ ...draft, model: e.target.value }); setNotice(null); setTestResult(null); }} />
                 </div>
               </>
             )}

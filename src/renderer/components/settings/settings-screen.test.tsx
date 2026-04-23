@@ -40,7 +40,10 @@ describe("SettingsScreen", () => {
     );
 
     expect(screen.getByRole("heading", { name: "AI 后端设置" })).toBeInTheDocument();
-    expect(screen.getByLabelText("AI 后端")).toHaveValue("openai-compatible");
+
+    // shadcn/ui Select: verify via the hidden native select element
+    const hiddenSelect = document.querySelector('select[name="provider"]') as HTMLSelectElement;
+    expect(hiddenSelect?.value).toBe("openai-compatible");
     expect(screen.getByLabelText("Model")).toHaveValue("gpt-5.4");
 
     fireEvent.change(screen.getByLabelText("Base URL"), { target: { value: "https://api.example.com" } });
