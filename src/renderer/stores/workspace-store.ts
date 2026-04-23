@@ -118,6 +118,11 @@ export const workspaceStore = {
       draftMessage: "",
     });
   },
+  resetWorkspace() {
+    state = createInitialState();
+    snapshot = freezeStateSnapshot(state);
+    emitChange();
+  },
   resetForTests() {
     state = createInitialState();
     snapshot = freezeStateSnapshot(state);

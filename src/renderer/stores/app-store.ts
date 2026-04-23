@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-import type { BookSummary } from "@shared/contracts";
+import type { BookSummary, GlobalLlmSettings } from "@shared/contracts";
 
 import { workspaceStore } from "./workspace-store";
 
@@ -10,6 +10,8 @@ type AppState = {
   readonly view: AppView;
   readonly books: readonly BookSummary[];
   readonly selectedBookId: string | null;
+  readonly llmSettings: GlobalLlmSettings;
+  readonly isSavingSettings: boolean;
   readonly isLoading: boolean;
   readonly hasBootstrapped: boolean;
   readonly isBookDialogOpen: boolean;
@@ -17,11 +19,22 @@ type AppState = {
   readonly deletingBookId: string | null;
 };
 
+function createEmptyLlmSettings(): GlobalLlmSettings {
+  return {
+    provider: "",
+    baseUrl: "",
+    apiKey: "",
+    model: "",
+  };
+}
+
 function createInitialState(): AppState {
   return {
     view: "home",
     books: [],
     selectedBookId: null,
+    llmSettings: createEmptyLlmSettings(),
+    isSavingSettings: false,
     isLoading: false,
     hasBootstrapped: false,
     isBookDialogOpen: false,
@@ -83,6 +96,15 @@ function replaceBook(nextBook: BookSummary) {
   return sortBooks(books);
 }
 
+function sanitizeLlmSettings(settings: GlobalLlmSettings | null | undefined): GlobalLlmSettings {
+  return {
+    provider: settings?.provider ?? "",
+    baseUrl: settings?.baseUrl ?? "",
+    apiKey: settings?.apiKey ?? "",
+    model: settings?.model ?? "",
+  };
+}
+
 export const appStore = {
   subscribe,
   getSnapshot,
@@ -93,10 +115,11 @@ export const appStore = {
 
     setState({ isLoading: true });
 
-    const books = await getApi().listBooks();
+    const [books, llmSettings] = await Promise.all([getApi().listBooks(), getApi().getGlobalLlmSettings()]);
 
     setState({
       books: sortBooks(books),
+      llmSettings: sanitizeLlmSettings(llmSettings),
       isLoading: false,
       hasBootstrapped: true,
     });
@@ -129,7 +152,11 @@ export const appStore = {
     setState({ view: "settings" });
   },
   goHome() {
-    setState({ view: "home" });
+    workspaceStore.resetWorkspace();
+    setState({
+      view: "home",
+      selectedBookId: null,
+    });
   },
   enterBook(book: BookSummary) {
     workspaceStore.initializeWorkspace({
@@ -156,6 +183,16 @@ export const appStore = {
       isBookDialogOpen: false,
       editingBookId: null,
       hasBootstrapped: true,
+    });
+  },
+  async saveGlobalLlmSettings(input: GlobalLlmSettings) {
+    setState({ isSavingSettings: true });
+
+    const saved = await getApi().saveGlobalLlmSettings(input);
+
+    setState({
+      llmSettings: sanitizeLlmSettings(saved),
+      isSavingSettings: false,
     });
   },
   async updateBook(input: { id: string; title: string }) {
