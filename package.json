@@ -1,0 +1,33 @@
+{
+  "name": "inkbloom",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "vitest": "node --input-type=module -e \"import { spawnSync } from 'node:child_process'; const args = process.argv.slice(1).filter((arg) => arg !== '--runInBand'); const result = spawnSync('vitest', args, { stdio: 'inherit' }); process.exit(result.status ?? 1);\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "electron": "^37.0.0",
+    "electron-vite": "^3.1.0",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.2.0"
+  }
+}
