@@ -4,7 +4,12 @@ import type {
   BibleItemInput,
   BibleItemType,
   ChapterInput,
+  CreateBookInput,
+  DeleteBookInput,
+  GlobalLlmSettings,
   InkbloomApi,
+  LlmConnectionTestResult,
+  UpdateBookInput,
   WorkflowSignals,
   WorkspaceSummary,
 } from "../shared/contracts";
@@ -14,6 +19,7 @@ export type { WorkspaceSummary };
 type ChatSendInput = {
   mode: "organize" | "explore" | "check" | "task";
   content: string;
+  projectId?: string;
   context?: {
     activeBibleType?: BibleItemType;
     stage?: "ideation" | "foundation" | "outline" | "drafting" | "revision" | "export";
@@ -45,6 +51,27 @@ type PreloadApi = InkbloomApi & {
 };
 
 const api: PreloadApi = {
+  listBooks() {
+    return ipcRenderer.invoke("library:listBooks");
+  },
+  createBook(input: CreateBookInput) {
+    return ipcRenderer.invoke("library:createBook", input);
+  },
+  updateBook(input: UpdateBookInput) {
+    return ipcRenderer.invoke("library:updateBook", input);
+  },
+  deleteBook(input: DeleteBookInput) {
+    return ipcRenderer.invoke("library:deleteBook", input);
+  },
+  getGlobalLlmSettings() {
+    return ipcRenderer.invoke("settings:getGlobalLlm");
+  },
+  saveGlobalLlmSettings(input: GlobalLlmSettings) {
+    return ipcRenderer.invoke("settings:saveGlobalLlm", input);
+  },
+  testGlobalLlmConnection(input: GlobalLlmSettings): Promise<LlmConnectionTestResult> {
+    return ipcRenderer.invoke("settings:testGlobalLlm", input);
+  },
   listBibleItems(projectId: string, type: BibleItemType) {
     return ipcRenderer.invoke("workspace:listBibleItems", { projectId, type });
   },

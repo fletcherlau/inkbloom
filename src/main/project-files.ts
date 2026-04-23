@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
 function assertSafeProjectName(parentDir: string, projectName: string) {
@@ -59,4 +59,25 @@ export function createProjectScaffold(parentDir: string, projectName: string) {
 
 export function ensureParentDirectory(filePath: string) {
   mkdirSync(dirname(resolve(filePath)), { recursive: true });
+}
+
+export function deleteProjectScaffold(projectPath: string, libraryRoot: string) {
+  const resolvedLibraryRoot = resolve(libraryRoot);
+  const resolvedProjectPath = resolve(projectPath);
+  const relativePath = relative(resolvedLibraryRoot, resolvedProjectPath);
+
+  if (
+    relativePath === "" ||
+    relativePath === "." ||
+    relativePath.startsWith("..") ||
+    isAbsolute(relativePath)
+  ) {
+    throw new Error("projectPath must stay within the library root");
+  }
+
+  if (!existsSync(resolvedProjectPath)) {
+    return;
+  }
+
+  rmSync(resolvedProjectPath, { recursive: true, force: false });
 }

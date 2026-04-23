@@ -11,6 +11,7 @@ export interface ChatMessage {
 }
 
 type WorkspaceState = {
+  readonly projectId: string | null;
   readonly projectName: string;
   readonly workflowStage: WorkflowStage;
   readonly selectedBibleType: BibleItemType;
@@ -19,9 +20,12 @@ type WorkspaceState = {
   readonly messages: readonly ChatMessage[];
 };
 
-function createInitialState(): WorkspaceState {
+function createInitialState(
+  overrides: Partial<Pick<WorkspaceState, "projectId" | "projectName">> = {},
+): WorkspaceState {
   return {
-    projectName: "未命名作品",
+    projectId: overrides.projectId ?? null,
+    projectName: overrides.projectName ?? "未命名作品",
     workflowStage: "foundation",
     selectedBibleType: "synopsis",
     selectedMode: "organize",
@@ -74,6 +78,11 @@ function freezeStateSnapshot(currentState: WorkspaceState) {
 export const workspaceStore = {
   getSnapshot,
   subscribe,
+  initializeWorkspace(input: { projectId: string; projectName: string }) {
+    state = createInitialState(input);
+    snapshot = freezeStateSnapshot(state);
+    emitChange();
+  },
   setSelectedBibleType(selectedBibleType: BibleItemType) {
     setState({ selectedBibleType });
   },
@@ -108,6 +117,11 @@ export const workspaceStore = {
       messages: nextMessages,
       draftMessage: "",
     });
+  },
+  resetWorkspace() {
+    state = createInitialState();
+    snapshot = freezeStateSnapshot(state);
+    emitChange();
   },
   resetForTests() {
     state = createInitialState();

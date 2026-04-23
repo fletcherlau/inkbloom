@@ -28,6 +28,20 @@ export class ProjectRepository {
       });
   }
 
+  updateName(id: string, name: string, updatedAt: string) {
+    this.database
+      .prepare(
+        `UPDATE projects
+         SET name = @name, updated_at = @updatedAt
+         WHERE id = @id`,
+      )
+      .run({ id, name, updatedAt });
+  }
+
+  delete(id: string) {
+    this.database.prepare("DELETE FROM projects WHERE id = ?").run(id);
+  }
+
   findById(id: string) {
     const row = this.database
       .prepare(

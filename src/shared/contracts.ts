@@ -63,6 +63,46 @@ export interface ProjectRecord {
   updatedAt: string;
 }
 
+export interface BookSummary {
+  id: string;
+  title: string;
+  rootPath: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GlobalLlmSettings {
+  provider: string;
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+}
+
+export interface LlmConnectionTestResult {
+  ok: boolean;
+  status: number | null;
+  endpoint: string;
+  protocol:
+    | "openai-chat-completions"
+    | "anthropic-messages"
+    | "kimi-cli-print"
+    | "kimi-cli-acp";
+  message: string;
+}
+
+export interface CreateBookInput {
+  title: string;
+}
+
+export interface UpdateBookInput {
+  id: string;
+  title: string;
+}
+
+export interface DeleteBookInput {
+  id: string;
+}
+
 export interface BibleItemRecord {
   id: string;
   projectId: string;
@@ -128,6 +168,13 @@ export interface TaskRecord {
 }
 
 export interface InkbloomApi {
+  listBooks(): Promise<BookSummary[]>;
+  createBook(input: CreateBookInput): Promise<BookSummary>;
+  updateBook(input: UpdateBookInput): Promise<BookSummary>;
+  deleteBook(input: DeleteBookInput): Promise<void>;
+  getGlobalLlmSettings(): Promise<GlobalLlmSettings>;
+  saveGlobalLlmSettings(input: GlobalLlmSettings): Promise<GlobalLlmSettings>;
+  testGlobalLlmConnection(input: GlobalLlmSettings): Promise<LlmConnectionTestResult>;
   listBibleItems(projectId: string, type: BibleItemType): Promise<BibleItemRecord[]>;
   createBibleItem(input: BibleItemInput): Promise<BibleItemRecord>;
   createChapter(input: ChapterInput): Promise<ChapterRecord>;
