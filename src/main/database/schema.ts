@@ -13,6 +13,12 @@ const SCHEMA_SQL = `
     updated_at TEXT NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS app_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
   CREATE TABLE IF NOT EXISTS bible_items (
     id TEXT PRIMARY KEY,
     project_id TEXT NOT NULL,

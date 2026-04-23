@@ -40,6 +40,7 @@ describe("project scaffold", () => {
     expect(tables.map((row) => row.name)).toEqual(
       expect.arrayContaining([
         "projects",
+        "app_settings",
         "bible_items",
         "chapters",
         "workflow_state",

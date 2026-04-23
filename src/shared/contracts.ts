@@ -63,6 +63,21 @@ export interface ProjectRecord {
   updatedAt: string;
 }
 
+export interface BookSummary {
+  id: string;
+  title: string;
+  rootPath: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GlobalLlmSettings {
+  provider: string;
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+}
+
 export interface BibleItemRecord {
   id: string;
   projectId: string;
