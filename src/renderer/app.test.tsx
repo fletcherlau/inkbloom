@@ -33,6 +33,13 @@ describe("App", () => {
           apiKey: "",
           model: "",
         }),
+        testGlobalLlmConnection: vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          endpoint: "https://api.example.com/chat/completions",
+          protocol: "openai-chat-completions",
+          message: "连接成功，模型返回：pong",
+        }),
         listBibleItems: vi.fn().mockResolvedValue([]),
         createBibleItem: vi.fn(),
         createChapter: vi.fn(),
@@ -56,11 +63,18 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "Inkbloom" })).toBeInTheDocument();
     expect(await screen.findByText("新建第一本书")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "设置" })).toBeInTheDocument();
-    expect(screen.getByText("AI 功能暂不可用，先到全局设置补齐 provider、API Key 和 model。")).toBeInTheDocument();
+    expect(screen.getByText("AI 功能暂不可用，先到 AI 后端设置选择后端并补齐所需配置。")).toBeInTheDocument();
   });
 
   it("opens settings, saves global config, and returns to home", async () => {
     const saveGlobalLlmSettings = vi.fn().mockImplementation(async (input) => input);
+    const testGlobalLlmConnection = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      endpoint: "https://api.example.com/chat/completions",
+      protocol: "openai-chat-completions",
+      message: "连接成功，模型返回：pong",
+    });
 
     Object.defineProperty(window, "inkbloom", {
       configurable: true,
@@ -77,6 +91,7 @@ describe("App", () => {
           model: "",
         }),
         saveGlobalLlmSettings,
+        testGlobalLlmConnection,
         listBibleItems: vi.fn().mockResolvedValue([]),
         createBibleItem: vi.fn(),
         createChapter: vi.fn(),
@@ -97,9 +112,9 @@ describe("App", () => {
 
     fireEvent.click((await screen.findAllByRole("button", { name: "设置" }))[0]!);
 
-    expect(await screen.findByRole("heading", { name: "全局 AI 设置" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "AI 后端设置" })).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText("Provider"), { target: { value: "openai" } });
+    fireEvent.change(screen.getByLabelText("AI 后端"), { target: { value: "openai-compatible" } });
     fireEvent.change(screen.getByLabelText("Base URL"), { target: { value: "https://api.example.com" } });
     fireEvent.change(screen.getByLabelText("API Key"), { target: { value: "sk-demo" } });
     fireEvent.change(screen.getByLabelText("Model"), { target: { value: "gpt-5.4" } });
@@ -107,7 +122,18 @@ describe("App", () => {
 
     await waitFor(() =>
       expect(saveGlobalLlmSettings).toHaveBeenCalledWith({
-        provider: "openai",
+        provider: "openai-compatible",
+        baseUrl: "https://api.example.com",
+        apiKey: "sk-demo",
+        model: "gpt-5.4",
+      }),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "测试连接" }));
+
+    await waitFor(() =>
+      expect(testGlobalLlmConnection).toHaveBeenCalledWith({
+        provider: "openai-compatible",
         baseUrl: "https://api.example.com",
         apiKey: "sk-demo",
         model: "gpt-5.4",
@@ -140,7 +166,7 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByRole("button", { name: "返回首页" })).toBeInTheDocument();
-    expect(screen.getByText("AI 功能暂不可用，先到全局设置补齐 provider、API Key 和 model。")).toBeInTheDocument();
+    expect(screen.getByText("AI 功能暂不可用，先到 AI 后端设置选择后端并补齐所需配置。")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "返回首页" }));
 

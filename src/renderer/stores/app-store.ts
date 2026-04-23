@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-import type { BookSummary, GlobalLlmSettings } from "@shared/contracts";
+import type { BookSummary, GlobalLlmSettings, LlmConnectionTestResult } from "@shared/contracts";
 
 import { workspaceStore } from "./workspace-store";
 
@@ -188,12 +188,20 @@ export const appStore = {
   async saveGlobalLlmSettings(input: GlobalLlmSettings) {
     setState({ isSavingSettings: true });
 
-    const saved = await getApi().saveGlobalLlmSettings(input);
+    try {
+      const saved = await getApi().saveGlobalLlmSettings(input);
 
-    setState({
-      llmSettings: sanitizeLlmSettings(saved),
-      isSavingSettings: false,
-    });
+      setState({
+        llmSettings: sanitizeLlmSettings(saved),
+        isSavingSettings: false,
+      });
+    } catch (error) {
+      setState({ isSavingSettings: false });
+      throw error;
+    }
+  },
+  async testGlobalLlmConnection(input: GlobalLlmSettings): Promise<LlmConnectionTestResult> {
+    return getApi().testGlobalLlmConnection(input);
   },
   async updateBook(input: { id: string; title: string }) {
     const updated = await getApi().updateBook(input);

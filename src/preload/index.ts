@@ -8,6 +8,7 @@ import type {
   DeleteBookInput,
   GlobalLlmSettings,
   InkbloomApi,
+  LlmConnectionTestResult,
   UpdateBookInput,
   WorkflowSignals,
   WorkspaceSummary,
@@ -18,6 +19,7 @@ export type { WorkspaceSummary };
 type ChatSendInput = {
   mode: "organize" | "explore" | "check" | "task";
   content: string;
+  projectId?: string;
   context?: {
     activeBibleType?: BibleItemType;
     stage?: "ideation" | "foundation" | "outline" | "drafting" | "revision" | "export";
@@ -66,6 +68,9 @@ const api: PreloadApi = {
   },
   saveGlobalLlmSettings(input: GlobalLlmSettings) {
     return ipcRenderer.invoke("settings:saveGlobalLlm", input);
+  },
+  testGlobalLlmConnection(input: GlobalLlmSettings): Promise<LlmConnectionTestResult> {
+    return ipcRenderer.invoke("settings:testGlobalLlm", input);
   },
   listBibleItems(projectId: string, type: BibleItemType) {
     return ipcRenderer.invoke("workspace:listBibleItems", { projectId, type });

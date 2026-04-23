@@ -6,6 +6,7 @@ import { WorkflowSidebar } from "../workflow/workflow-sidebar";
 import { useWorkspaceStore, workspaceStore } from "../../stores/workspace-store";
 
 export function AppShell() {
+  const projectId = useWorkspaceStore((state) => state.projectId);
   const projectName = useWorkspaceStore((state) => state.projectName);
   const workflowStage = useWorkspaceStore((state) => state.workflowStage);
   const selectedBibleType = useWorkspaceStore((state) => state.selectedBibleType);
@@ -13,7 +14,7 @@ export function AppShell() {
   const draftMessage = useWorkspaceStore((state) => state.draftMessage);
   const messages = useWorkspaceStore((state) => state.messages);
   const llmSettings = useAppStore((state) => state.llmSettings);
-  const isLlmConfigured = Boolean(llmSettings.provider && llmSettings.apiKey && llmSettings.model);
+  const isBackendConfigured = Boolean(llmSettings.provider && llmSettings.apiKey);
 
   return (
     <main style={styles.shell}>
@@ -34,12 +35,13 @@ export function AppShell() {
               返回首页
             </button>
           </header>
-          {!isLlmConfigured ? (
-            <p style={styles.notice}>AI 功能暂不可用，先到全局设置补齐 provider、API Key 和 model。</p>
+          {!isBackendConfigured ? (
+            <p style={styles.notice}>AI 功能暂不可用，先到 AI 后端设置选择后端并补齐所需配置。</p>
           ) : null}
           <p style={styles.intro}>打开作品或创建新项目以开始创作。</p>
           <ChatPanel
             messages={messages}
+            projectId={projectId}
             draftMessage={draftMessage}
             selectedMode={selectedMode}
             onDraftChange={workspaceStore.setDraftMessage}

@@ -21,7 +21,7 @@ export function App() {
 
   const editingBook = books.find((book) => book.id === editingBookId) ?? null;
   const deletingBook = books.find((book) => book.id === deletingBookId) ?? null;
-  const isLlmConfigured = Boolean(llmSettings.provider && llmSettings.apiKey && llmSettings.model);
+  const isBackendConfigured = Boolean(llmSettings.provider && llmSettings.apiKey);
 
   if (view === "settings") {
     return (
@@ -29,6 +29,7 @@ export function App() {
         settings={llmSettings}
         isSaving={isSavingSettings}
         onSave={appStore.saveGlobalLlmSettings}
+        onTestConnection={appStore.testGlobalLlmConnection}
         onGoHome={appStore.goHome}
       />
     );
@@ -40,9 +41,9 @@ export function App() {
 
   return (
     <>
-      {!isLlmConfigured ? (
+      {!isBackendConfigured ? (
         <div style={styles.homeNoticeWrap}>
-          <p style={styles.homeNotice}>AI 功能暂不可用，先到全局设置补齐 provider、API Key 和 model。</p>
+          <p style={styles.homeNotice}>AI 功能暂不可用，先到 AI 后端设置选择后端并补齐所需配置。</p>
         </div>
       ) : null}
       <HomeScreen

@@ -125,4 +125,35 @@ describe("appStore", () => {
     expect(appStore.getSnapshot().books).toEqual([]);
     expect(appStore.getSnapshot().view).toBe("home");
   });
+
+  it("resets saving state when saving backend settings fails", async () => {
+    Object.defineProperty(window, "inkbloom", {
+      configurable: true,
+      writable: true,
+      value: {
+        listBooks: vi.fn().mockResolvedValue([]),
+        createBook: vi.fn(),
+        updateBook: vi.fn(),
+        deleteBook: vi.fn(),
+        getGlobalLlmSettings: vi.fn(),
+        saveGlobalLlmSettings: vi.fn().mockRejectedValue(new Error("save failed")),
+        testGlobalLlmConnection: vi.fn(),
+        listBibleItems: vi.fn(),
+        createBibleItem: vi.fn(),
+        createChapter: vi.fn(),
+        getWorkflowSnapshot: vi.fn(),
+      },
+    });
+
+    await expect(
+      appStore.saveGlobalLlmSettings({
+        provider: "kimi-cli",
+        baseUrl: "",
+        apiKey: "sk-demo",
+        model: "kimi-for-coding",
+      }),
+    ).rejects.toThrow("save failed");
+
+    expect(appStore.getSnapshot().isSavingSettings).toBe(false);
+  });
 });

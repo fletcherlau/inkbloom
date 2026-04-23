@@ -7,6 +7,7 @@ import { MessageList } from "./message-list";
 
 type ChatPanelProps = {
   messages: readonly ChatMessage[];
+  projectId?: string | null;
   draftMessage?: string;
   selectedMode?: ChatActionMode;
   onDraftChange?: (value: string) => void;
@@ -40,6 +41,7 @@ type ChatApiWindow = Window & {
     sendChatTurn?: (input: {
       mode: ChatActionMode;
       content: string;
+      projectId?: string;
       context?: ChatRequestContext;
     }) => Promise<ChatSendResult>;
   };
@@ -47,6 +49,7 @@ type ChatApiWindow = Window & {
 
 export function ChatPanel({
   messages,
+  projectId = null,
   draftMessage = "",
   selectedMode = "organize",
   onDraftChange = () => undefined,
@@ -88,6 +91,7 @@ export function ChatPanel({
     void sendChatTurn({
       mode: selectedMode,
       content,
+      projectId: projectId ?? undefined,
       context: buildChatRequestContext(selectedMode, content),
     })
       .then((result) => {

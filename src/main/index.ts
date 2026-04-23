@@ -13,16 +13,16 @@ async function createWindow() {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: join(__dirname, "../preload/index.js"),
+      sandbox: false,
+      preload: fileURLToPath(new URL("../preload/index.mjs", import.meta.url)),
     },
   });
 
   if (process.env["ELECTRON_RENDERER_URL"]) {
     await window.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-    return;
+  } else {
+    await window.loadFile(join(__dirname, "../renderer/index.html"));
   }
-
-  await window.loadFile(join(__dirname, "../renderer/index.html"));
 }
 
 app.whenReady().then(async () => {
