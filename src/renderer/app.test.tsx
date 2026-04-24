@@ -114,7 +114,7 @@ describe("App", () => {
 
     expect(await screen.findByRole("heading", { name: "AI 后端设置" })).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText("AI 后端"), { target: { value: "openai-compatible" } });
+    fireEvent.change(document.querySelector('select[name="provider"]')!, { target: { value: "openai-compatible" } });
     fireEvent.change(screen.getByLabelText("Base URL"), { target: { value: "https://api.example.com" } });
     fireEvent.change(screen.getByLabelText("API Key"), { target: { value: "sk-demo" } });
     fireEvent.change(screen.getByLabelText("Model"), { target: { value: "gpt-5.4" } });

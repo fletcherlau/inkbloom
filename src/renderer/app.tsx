@@ -41,11 +41,13 @@ export function App() {
 
   return (
     <>
-      {!isBackendConfigured ? (
-        <div style={styles.homeNoticeWrap}>
-          <p style={styles.homeNotice}>AI 功能暂不可用，先到 AI 后端设置选择后端并补齐所需配置。</p>
+      {!isBackendConfigured && (
+        <div className="fixed top-4 right-4 z-50 max-w-md">
+          <p className="p-4 rounded-lg bg-amber-950/30 text-amber-400 text-sm shadow-lg">
+            AI 功能暂不可用，先到 AI 后端设置选择后端并补齐所需配置。
+          </p>
         </div>
-      ) : null}
+      )}
       <HomeScreen
         books={books}
         isLoading={isLoading}
@@ -67,21 +69,3 @@ export function App() {
     </>
   );
 }
-
-const styles = {
-  homeNoticeWrap: {
-    position: "fixed" as const,
-    top: "1rem",
-    right: "1rem",
-    zIndex: 10,
-    maxWidth: "min(28rem, calc(100vw - 2rem))",
-  },
-  homeNotice: {
-    margin: 0,
-    padding: "0.9rem 1rem",
-    borderRadius: "1rem",
-    background: "rgba(188, 114, 67, 0.12)",
-    color: "#6b3f24",
-    boxShadow: "0 10px 24px rgba(85, 63, 43, 0.08)",
-  },
-};
